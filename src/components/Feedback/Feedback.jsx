@@ -1,68 +1,64 @@
 // import PropTypes from 'prop-types';
-import styles from './Feedback.css'
-import React, {Component} from "react";
-import { toContainHTML } from '@testing-library/jest-dom/dist/matchers';
 
-class Feedback extends Component{
+import React, { Component } from "react";
+import Statistics from '../Statistics/Statistics'
+import FeedbackOptions from "../FeedbackOptions/FeedbackOptions";
+import Section from "../Section/Section";
+import Notification from "../Notification/Notification";
+
+class Feedback extends Component {
     state = {
         good: 0,
         neutral: 0,
         bad: 0
     }
 
-    onIncreaseGood = () => {
-        this.setState((prevState) => {
-            console.log({ prevState });
+    onFeedbackHandle = (key) => {
+        this.setState(prevState => {
             return {
-                good: prevState.good + 1,
+
+                [key]: prevState[key] + 1
             }
         })
     }
-    onIncreaseNeutral = () => {
-        this.setState((prevState) => {
-            console.log({ prevState });
-            return { neutral: prevState.neutral + 1}
-        })
-    }
-    onIncreaseBad = () => {
-        this.setState((prevState) => {
-            console.log({ prevState });
-            return { bad: prevState.bad + 1,}
-        })
-    }
-    
+
     countTotalFeedback = () => {
-        this.setState((prevState) => {
-            console.log({ prevState });
-            return { total: 10}
-        })
-    }
+        return Object.values(this.state).reduce((total, item) => total + item, 0)}
     
-    render() {
+
+    
+    countPositiveFeedbackPercentage = () => {
         
-        return <div>
-            <h2>Please leave feedback</h2>
-            <ul>
-                <li>
-                    <button onClick={this.onIncreaseGood} >Good</button>
-                </li>
-                <li>
-                    <button onClick={this.onIncreaseNeutral}>Neutral</button>
-                </li>
-                <li>
-                    <button onClick={this.onIncreaseBad}>Bad</button>
-                </li>
-            </ul>
-            <p>Statistics</p>
-            <ul>
-                <li>Good: {this.state.good}</li>
-                <li>Neutral: {this.state.neutral}</li>
-                <li>Bad: {this.state.bad}</li>
-                <li>Total: {this.props.total}</li>
-                <li>positive feedback: {}</li>
-            </ul>
-        </div>
+        return Math.round (this.state.good / this.countTotalFeedback() * 100)
     }
+
+
+    render() {
+        const total = this.countTotalFeedback();
+        const percentage = this.countPositiveFeedbackPercentage();
+        return (
+            <div>
+                <Section title="Please leave feedback">
+                    <FeedbackOptions
+                    options={Object.keys(this.state)}
+                    onLeaveFeedback={this.onFeedbackHandle}/>
+                </Section>
+                
+                <Section title="Statistics">
+                    {total === 0 ? (<Notification message={"There is no feedback"} />) : (
+                        <Statistics
+                            good={this.state.good }
+                            neutral={this.state.neutral }
+                            bad={this.state.bad  }
+                            total={ total}
+                            positivePercentage={percentage } />
+                    )}
+                    </Section>          
+                
+            
+            </div>
+        );
+        }
 }
 
 export default Feedback
