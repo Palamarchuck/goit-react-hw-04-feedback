@@ -1,0 +1,18 @@
+.feedbackList{
+    display:flex;
+    justify-content: space-evenly;
+    margin-left: 10px;
+    
+}
+
+.feedbackListItem{
+    list-style: none;
+}
+
+.feedbackBtn{
+    border-radius: 3px;
+    background-color: azure;
+    height:30px;
+    font-size: medium;
+    font-weight: 500;
+}
