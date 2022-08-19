@@ -14,7 +14,7 @@ const Feedback = () => {
     
     const onFeedbackHandleIncrement = event => {
         console.log(event.target);
-        switch (event.current.target) {
+        switch (event.target.textContent) {
             case 'good':
                 setGood(prevGood => prevGood + 1);
                 break;
